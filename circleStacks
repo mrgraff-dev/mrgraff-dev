@@ -1,0 +1,96 @@
+/*
+GRAFF_sketch_2D_coding_Final_Assignment: Print ready images
+ ARTS 330-001 UNM FALL 2021
+ 
+ This sketch draws randomly sized/positioned/colored stacks of overlapping circles.
+ The size of the circles gradually shrink and rise to create a stack.
+ The fill colors of each circle are random gradients.
+ 
+ The circles are atop a grid background that is randomly sized each time.
+ Whether or not the grid appears is also random.
+ */
+
+int circleColors;
+int circleLayers;
+int circleLoops;
+int circleRadius;
+int circleX;
+int circleY;
+int makeGrid;
+
+void setup() {
+  size(2400, 3000); // 8" x 10" @ 300dpi
+  background(#2D3742);
+  noStroke();
+  ellipseMode(RADIUS);
+}
+
+void draw() {
+  // Needed to capture key presses.
+}
+
+void keyPressed() {
+  //LEFT - clear the canvas and create a new version of the sketch.
+  // Randomly choose to draw a randomly-sized grid.
+  // Draw a random number of randomized stacks of overlapping circles.
+
+  //RIGHT - take a screenshot.
+
+  if (key == CODED) {
+    if (keyCode == LEFT) {
+      background(#2D3742);
+
+      //Decide to draw a grid with a random 0 or 1.
+      makeGrid = int(random(2) + 1) % 2;
+      if (makeGrid == 1) {
+        stroke(153, 20);
+        drawGrid(int(random(20) + 1));
+      }
+
+      noStroke();
+      circleLoops = int(random(2, 12) + 1);
+      for (int loops = 0; loops < circleLoops; loops++) {
+        circleColors = int(random(3) + 1);
+        circleLayers = int((random(6)));
+        circleRadius = int(random(255));
+        circleX = int(random(255, width - 255));
+        circleY = int(random(255, height - 255));
+        circleStack(circleColors, circleLayers, circleRadius, circleX, circleY);
+      }
+    } else if (keyCode == RIGHT) {
+      saveFrame();
+    }
+  }
+}
+
+void drawGrid(int gridSize) {
+  // Draw an evenly divided grid of horizontal & vertical lines.
+
+  for (int cols = 0; cols < width; cols = cols + width/gridSize) {
+    line(cols, 0, cols, height);
+  }
+
+  for (int rows = 0; rows < height; rows = rows + height/gridSize) {
+    line(0, rows, width, rows);
+  }
+}
+
+void circleStack(int colors, int layers, int radius, int x, int y) {
+  // One random stack of overlapping circles.
+
+  for (int rings = 0; rings < layers; rings++) {
+    switch(colors) {
+    case 1:
+      fill(255 - ((255/layers) * rings), radius, 255 - ((255/layers) * rings), random(255));
+      break;
+    case 2:
+      fill(100, 255 - ((255/layers) * rings), radius, random(255));
+      break;
+    case 3:
+      fill(radius, 100, 255 - ((255/layers) * rings), random(255));
+      break;
+    }
+
+    circle(x, y * (1 - (0.05 * rings)), radius * (2 - (0.2 * rings)));
+  }
+}
